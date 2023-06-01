@@ -1,83 +1,46 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[83]:
-
-
 import nltk
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('punkt')
-nltk.download('wordnet')
+import string
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+nltk.download('stopwords')
 
-# In[84]:
+# Document
+document = "This is an example document for tokenization. This is an example document for POS tagging, stemming"
 
+# Tokenization
+tokens = word_tokenize(document.lower())
 
-document = "This is an example document for tokenization. , This is an example document for POS tagging ,stemming"
-
-
-# In[85]:
-
-
-#Document Preprocessing
-tokens = word_tokenize(document)
-print(tokens)
-
-
-# In[86]:
-
-
-#POS Tagging
+# POS Tagging
 pos_tags = pos_tag(tokens)
-print(pos_tags)
 
-
-# In[87]:
-
-
-#Stop Words Removal
+# Stop Words Removal
 stop_words = set(stopwords.words('english'))
-
-
-# In[88]:
-
-
 filtered_tokens = [token for token in tokens if token.lower() not in stop_words]
-print(filtered_tokens)
 
-
-# In[89]:
-
-
-#Stemming
+# Stemming
 stemmer = PorterStemmer()
-stemmed_tokens = [stemmer.stem(token) for token in tokens]
-print(stemmed_tokens)
+stemmed_tokens = [stemmer.stem(token) for token in filtered_tokens]
 
-
-# In[90]:
-
-
-#Lemmatization
+# Lemmatization
 lemmatizer = WordNetLemmatizer()
+lemmatized_tokens = [lemmatizer.lemmatize(token) for token in stemmed_tokens]
 
+# TF-IDF Vectorization
+tfidf_vectorizer = TfidfVectorizer()
+tfidf_matrix = tfidf_vectorizer.fit_transform([document])
 
-# In[91]:
-
-
-lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens]
-print(lemmatized_tokens)
-
-
-# In[ ]:
-
-
-
-
+print("Tokens:", tokens)
+print("POS Tags:", pos_tags)
+print("Filtered Tokens:", filtered_tokens)
+print("Stemmed Tokens:", stemmed_tokens)
+print("Lemmatized Tokens:", lemmatized_tokens)
+print("TF-IDF Matrix:")
+print(tfidf_matrix)
